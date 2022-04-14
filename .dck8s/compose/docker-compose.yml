@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+  api:
+    image: api
+    build: ../../api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST_SERVICE=db
+  db:
+    image: db
+    build: ../../db
+    volumes:
+      - "db_volume:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: pass
+
+  web:
+    image: web
+    build: ../../web
+    ports:
+      - "9191:80"
+    environment:
+      - WORDSMITH_API_SERVICE=api
+volumes:
+  db_volume:
